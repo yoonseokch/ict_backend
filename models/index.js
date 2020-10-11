@@ -1,14 +1,23 @@
 const Sequelize = require('sequelize');
 const db = {};
+const configs = {
+  'db': process.env.DB_DB,
+  'id': process.env.DB_ID,
+  'pw': process.env.DB_PW,
+  'host': process.env.DB_HOST,
+};
+
 const sequelize = new Sequelize(
-  process.env.DB_DB,
-  process.env.DB_ID,
-  process.env.DB_PW,
+  configs.db,
+  configs.id,
+  configs.pw,
   {
-    'host' : process.env.DB_HOST,
+    'host' : configs.host,
     'dialect' : 'mysql'
   },
 );
+
+console.log(configs);
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
