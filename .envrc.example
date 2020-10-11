@@ -2,4 +2,4 @@ export DB_DB=example
 export DB_ID=example
 export DB_PW=example
 export DB_HOST=example
-
+export NAVER_TOKEN=example
