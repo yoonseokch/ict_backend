@@ -1,134 +1,5 @@
-const Sequelize = require('sequelize');
-const sequelize2= new Sequelize(
-  process.env.DB_DB,
-  process.env.DB_ID,
-  process.env.DB_PW,
-  {
-    'host' : process.env.DB_HOST,
-    'dialect' : 'mysql'
-  }
-);
+const db=require('./models/index.js');
 
-const UserInterestCategory = sequelize2.define('UserInterestCategory',{
-  User_ID : {
-    type : Sequelize.INTEGER,
-    primaryKey: true
-  },
-  Category_ID : {
-    type : Sequelize.INTEGER,
-    primaryKey: true
-  }
-},{freezeTableName: true,timestamps: false})
-const Reply = sequelize2.define('Reply',{
-  ID : {
-    type : Sequelize.INTEGER,
-    primaryKey : true
-  },
-  content : {
-    type : Sequelize.STRING
-  },
-  writtenDate : {
-    type : Sequelize.DATE
-  },
-  reports : {
-    type : Sequelize.INTEGER
-  },
-  Post_ID : {
-    type : Sequelize.INTEGER
-  },
-  User_ID : {
-    type : Sequelize.INTEGER
-  }
-},{freezeTableName: true,timestamps: false})
-const FavCase = sequelize2.define('FavCase',{
-  User_ID : {
-    type: Sequelize.INTEGER,
-    primaryKey: true
-  },
-  Precedent_ID : {
-    type: Sequelize.INTEGER,
-    primaryKey: true
-  }
-},{freezeTableName: true,timestamps: false});
-const user=sequelize2.define('User', {
-  ID: {
-    type: Sequelize.INTEGER,
-    primaryKey: true
-  },
-  userID: {
-    type: Sequelize.STRING
-  },
-  userPW: {
-    type: Sequelize.STRING
-  },
-  email: {
-    type: Sequelize.STRING
-  },
-  name:
-  {
-      type: Sequelize.STRING
-  },
-  birth:
-  {
-      type:Sequelize.DATE
-  },
-  gender:
-  {
-      type:Sequelize.INTEGER
-  },
-  lawyer:
-  {
-      type:Sequelize.INTEGER
-  },
-  photo:
-  {
-    type:Sequelize.TEXT
-  },
-  phone:
-  {
-    type:Sequelize.STRING
-  }
-},{freezeTableName: true,timestamps: false});
-const post=sequelize2.define('Post',{
-  ID: {
-    type: Sequelize.INTEGER,
-    primaryKey: true
-  },
-  User_ID: {
-    type: Sequelize.INTEGER
-  },
-  boardCategory: {
-    type: Sequelize.INTEGER
-  },
-  title: {
-    type: Sequelize.STRING
-  },
-  content:
-  {
-      type: Sequelize.TEXT
-  },
-  writtenDate:
-  {
-      type: Sequelize.DATE
-  },
-  views:
-  {
-    type:Sequelize.INTEGER
-  },
-  reports:
-  {
-    type:Sequelize.INTEGER
-  }
-},{freezeTableName: true,timestamps: false});
-const precedent = sequelize2.define('Precedent',{
-  ID: {
-    type: Sequelize.INTEGER,
-    primaryKey: true
-  },
-  caseName: {
-    type: Sequelize.STRING
-  }
-},{freezeTableName: true,timestamps: false});
 const express = require('express');
 const app = express();
 //app.use(express.urlencoded());
@@ -137,20 +8,21 @@ const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 app.use(express.json()); 
 app.use(require('cors')());
+
 app.get('/interests/:id',(req,res)=> {
-  UserInterestCategory.findAll({
+  db.User.UserInterestCategory.findAll({
     where : {User_ID:req.params.id}
   }).then((data) => {
     res.json(data);
   }
 )})
 app.post('/interests/register',(req,res)=>{
-  UserInterestCategory.create(req.body).then((data) => {
+  db.User.UserInterestCategory.create(req.body).then((data) => {
     res.json(data);
   })
 })
 app.delete('/interests',(req,res)=>{
-  UserInterestCategory.destroy({
+  db.User.UserInterestCategory.destroy({
     where : {
       User_ID : req.body.User_ID,
       Category_ID: req.body.Category_ID
@@ -160,20 +32,20 @@ app.delete('/interests',(req,res)=>{
   })
 })
 app.get('/user/:id',(req,res) => {
-  user.findOne({
+  db.User.user.findOne({
     where : {ID: req.params.id}
   }).then((data) =>{
     res.json(data);
   })})
 app.post('/user/register',(req,res) => {
-  user.findAll({
+  db.User.user.findAll({
     where : { userID : req.body.userID}
   }).then((data)=>
   {
     if (data.length===0)
     {
       console.log(data);
-      user.create(req.body)
+      user.user.create(req.body)
       .then((data)=>{
         res.json({success:true});
       }).catch((err)=>
@@ -188,7 +60,7 @@ app.post('/user/register',(req,res) => {
   });
 })
 app.get('/main/boards/:category',(req,res)=>{
-  post.findAll({
+  db.Board.Post.findAll({
     where : {
       boardCategory : req.params.category
     },
@@ -202,7 +74,7 @@ app.get('/main/boards/:category',(req,res)=>{
 })
 app.get('/boards/posts',(req,res)=>{
  // console.log("hi");
-  post.findAll({
+  db.Board.Post.findAll({
     order : [['ID','DESC']]
   })
   .then((data) => {
@@ -212,7 +84,7 @@ app.get('/boards/posts',(req,res)=>{
   )
 });
 app.get('/reply/:id',(req,res)=>{
-  Reply.findAll({
+  db.Board.Reply.findAll({
     where: {Post_ID:req.params.id}
   }).then(result=>{
     res.json(result);
@@ -220,14 +92,14 @@ app.get('/reply/:id',(req,res)=>{
 })
 app.get('/boards/:id',(req,res)=>{
   //console.log(req.params.id);
-  post.findOne({
+  db.Board.Post.findOne({
     where: {ID:req.params.id}
   }).then(result=>{
     res.json(result);
   })
 })
 app.post('/boards/write',(req,res) => {
-  post.create(req.body).then( result => {
+  db.Board.Post.create(req.body).then( result => {
     res.json({success:true});  
   })
   .catch( err => {
@@ -235,14 +107,14 @@ app.post('/boards/write',(req,res) => {
   })
 });
 app.post('/reply/write',(req,res) => {
-  Reply.create(req.body).then(result =>{
+  db.Board.Reply.create(req.body).then(result =>{
     res.json({success:true});
   })
 });
 app.post('/analyze/myjudgement',(req,res)=>
 {
   console.log("hi");
-  FavCase.create(req.body).then(result=>{
+  user.FavCase.create(req.body).then(result=>{
    // console.log(result);
     res.json({success:true});
   }).catch(err=>{
@@ -251,7 +123,7 @@ app.post('/analyze/myjudgement',(req,res)=>
   })
 })
 app.delete('/boards/:id',(req,res) =>{
-  post.destroy({
+  db.Board.Post.destroy({
     where : {ID : req.params.id}
   }).then(
   //  console.log("Hi")
@@ -300,7 +172,7 @@ axios.post("https://571c51cbfe4f47808884e4a36286721d.apigw.ntruss.com/custom/v1/
 });
 
 app.post('/user/login', (req, res) => {
-  user.findOne({
+  user.user.findOne({
     where: { userID: req.body.userID },
     order : [ ['ID','DESC']]
   })
