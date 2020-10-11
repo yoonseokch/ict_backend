@@ -305,7 +305,6 @@ app.post('/user/login', (req, res) => {
     order : [ ['ID','DESC']]
   })
   .then((user) => {
-    console.log(user.dataValues);
     if (user===null)
     {
         res.json({success:false});
