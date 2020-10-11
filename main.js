@@ -8,6 +8,7 @@ const sequelize2= new Sequelize(
     'dialect' : 'mysql'
   }
 );
+
 const UserInterestCategory = sequelize2.define('UserInterestCategory',{
   User_ID : {
     type : Sequelize.INTEGER,
