@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+  - 12
+
+services:
+  - docker
+
+install:
+  - npm i
+
+before_script:
+  - npm run lint
+
+script:
+  - npm run build
+
+after_success:
+  - docker login -u "$DOCKER_USER" -p "$DOCKER_PW"
+  - if [ -n "${TRAVIS_TAG}" ]; then
+      docker build -t equisde/jjungs-web:${TRAVIS_TAG} .;
+      docker push equisde/jjungs-web:${TRAVIS_TAG};
+    else
+      docker build -t equisde/jjungs-web:latest .;
+      docker push equisde/jjungs-web:latest;
+    fi
