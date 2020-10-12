@@ -5,12 +5,18 @@ node_js:
 services:
   - docker
 
+script:
+  - if [ -n "${TRAVIS_TAG}" ]; then
+      docker build -t yoonseokch/ict-backend:${TRAVIS_TAG} .;
+    else
+      docker build -t yoonseokch/ict-backend:latest .;
+    fi
+
 after_success:
   - docker login -u "$DOCKER_USER" -p "$DOCKER_PW"
   - if [ -n "${TRAVIS_TAG}" ]; then
-      docker build -t equisde/jjungs-web:${TRAVIS_TAG} .;
-      docker push equisde/jjungs-web:${TRAVIS_TAG};
+      docker push yoonseokch/ict-backend:${TRAVIS_TAG};
     else
-      docker build -t equisde/jjungs-web:latest .;
-      docker push equisde/jjungs-web:latest;
+      docker push yoonseokch/ict-backend:latest;
     fi
+
