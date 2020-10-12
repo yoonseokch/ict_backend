@@ -18,24 +18,36 @@ router.get('/posts/:id',(req,res)=>{
     })
   });
 router.get('/:category',(req,res)=>{
-    db.Board.Post.findAll({
+    const info = {
       where : {
         boardCategory : req.params.category
-      },
-      limit : 3,
-      order : [
-        ['ID','DESC']
-      ]
-    }).then((data)=>{
+      }
+    };
+    
+    console.log(req.query); 
+    if (req.query.limit)
+    {
+      if (req.query.limit!==NaN)
+      {
+        info.limit=parseInt(req.query.limit);
+      }
+    }
+    info.order=[['ID','DESC']];
+    db.Board.Post.findAll(info).then((data)=>{
       res.json(data);
     })
   });
 
 
 router.post('/write',(req,res) => {
-db.Board.Post.create(req.body).then( result => {
+  var a=req.body;
+  a.views=0;
+  a.reports=0;
+  var today=new Date();
+  a.writtenDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  db.Board.Post.create(a).then( result => {
     res.json({success:true});  
-})
+  })
 .catch(err => {
     res.json({success: false});  
 })

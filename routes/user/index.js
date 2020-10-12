@@ -6,10 +6,8 @@ router.use('/interests', require('./interest.js'));
 router.post('/judgement',(req,res)=>
 {
   db.User.FavCase.create(req.body).then(result=>{
-   // console.log(result);
     res.json({success:true});
   }).catch(err=>{
-   // console.log(err);
     res.json({success:false});
   })
 });
