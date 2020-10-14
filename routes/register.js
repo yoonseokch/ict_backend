@@ -23,5 +23,19 @@ router.post('/',(req,res) => {
       }
     });
   });
-
+  router.post('/check',(req,res) => {
+    db.User.User.findAll({
+      where : { userID : req.body.userID}
+    }).then((data)=>
+    {
+      if (data.length===0)
+      { 
+        res.json({success:true});
+      }
+      else
+      {
+        res.json({success:false});
+      }
+    });
+  });
 module.exports = router;
