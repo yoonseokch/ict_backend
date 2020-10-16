@@ -1,4 +1,4 @@
-# ict_backend
+# ict_backend [![travis build status](https://travis-ci.org/yoonseokch/ict_backend.svg?branch=master)](https://travis-ci.org/github/yoonseokch/ict_backend)
 
 ## how to install
 ```
