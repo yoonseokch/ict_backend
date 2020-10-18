@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db=require('../../models/index.js');
-
+const jwt=require('jsonwebtoken');
 router.use('/interests', require('./interest.js'));
 router.post('/judgement',(req,res)=>
 {
@@ -12,11 +12,14 @@ router.post('/judgement',(req,res)=>
   })
 });
 router.get('/:id',(req,res) => {
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({success:false});
     db.User.User.findOne({
-      where : {ID: req.params.id}
+      where : {ID: decoded.id}
     }).then((data) =>{
       res.json(data);
     })
+  })
   });
 
 module.exports = router;

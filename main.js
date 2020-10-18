@@ -1,6 +1,6 @@
 const port = process.env.PORT || 8080;
 const db = require('./models/index.js');
-
+const jwt=require('jsonwebtoken');
 const express = require('express');
 const app = express();
 //app.use(express.urlencoded());
@@ -9,15 +9,21 @@ const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 app.use(express.json()); 
 app.use(require('cors')());
-
+app.use('/login', require('./routes/login.js'));
+app.use('/register', require('./routes/register.js'));
 app.use((req, res, next) => {
-	console.log(req.method, req.url, res.status);
+  console.log(req.headers['token']);
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({success:false});
+    
+    console.log(decoded);
+  })
+//  console.log(req.headers);
+//	console.log(req.method, req.url, res.status);
 	next();
 });
 app.use('/test', require('./routes/test.js'));
 app.use('/boards',require('./routes/board.js'));
-app.use('/login', require('./routes/login.js'));
-app.use('/register', require('./routes/register.js'));
 app.use('/reply', require('./routes/reply.js'));
 app.use('/user',  require('./routes/user/index'));
 

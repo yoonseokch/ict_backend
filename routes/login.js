@@ -25,7 +25,7 @@ router.post('/', (req, res) => {
             process.env.secret, 
             {
                 expiresIn: '7d',
-                issuer: 'velopert.com',
+                issuer: 'lawbot',
                 subject: 'userInfo'
             }, (err, token) => {
               console.log(token);
