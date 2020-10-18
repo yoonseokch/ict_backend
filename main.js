@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 	console.log(req.method, req.url, res.status);
 	next();
 });
-
+app.use('/test', require('./routes/test.js'));
 app.use('/boards',require('./routes/board.js'));
 app.use('/login', require('./routes/login.js'));
 app.use('/register', require('./routes/register.js'));
