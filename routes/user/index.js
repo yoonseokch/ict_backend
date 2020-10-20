@@ -5,7 +5,15 @@ const jwt=require('jsonwebtoken');
 router.use('/interests', require('./interest.js'));
 router.post('/judgement',(req,res)=>
 {
-  db.User.FavCase.create(req.body).then(result=>{
+  var a={};
+  a.Precedent_ID=req.body.Precedent_ID;
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    
+    console.log(decoded);
+    a.User_ID=decoded.id;
+  })
+  console.log(a);
+  db.User.FavCase.create(a).then(result=>{
     res.json({success:true});
   }).catch(err=>{
     res.json({success:false});
