@@ -26,7 +26,7 @@ app.use('/test', require('./routes/test.js'));
 app.use('/boards',require('./routes/board.js'));
 app.use('/reply', require('./routes/reply.js'));
 app.use('/user',  require('./routes/user/index'));
-
+app.use('/interpret',require('./routes/interpret.js'));
 app.post('/apicall1', upload.single('temp'),(req, res) => {
   let file = req.file.buffer.toString('base64');
   var mimetype = req.file.mimetype.split("/");
