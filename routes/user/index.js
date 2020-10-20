@@ -29,5 +29,11 @@ router.get('/',(req,res) => {
     })
   })
   });
+  router.get('/:id',(req,res) => {
 
+      db.User.User.findOne({
+        where : {ID: req.params.id}
+      }).then((data) =>{
+        res.json(data);
+      })})
 module.exports = router;
