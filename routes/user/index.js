@@ -19,7 +19,7 @@ router.post('/judgement',(req,res)=>
     res.json({success:false});
   })
 });
-router.get('/:id',(req,res) => {
+router.get('/',(req,res) => {
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({success:false});
     db.User.User.findOne({

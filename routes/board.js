@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db=require('../models/index.js');
-
+const jwt=require('jsonwebtoken');
 router.get('/posts',(req,res)=>{
     db.Board.Post.findAll({
       order : [['ID','DESC']]
@@ -43,6 +43,11 @@ router.post('/write',(req,res) => {
   var a=req.body;
   a.views=0;
   a.reports=0;
+  
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({success:false});
+    a.User_ID=decoded.id;
+  })
   var today=new Date();
   a.writtenDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
   db.Board.Post.create(a).then( result => {
