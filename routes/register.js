@@ -23,7 +23,7 @@ router.post('/',(req,res) => {
       }
     });
   });
-  router.post('/check',(req,res) => {
+router.post('/check',(req,res) => {
     db.User.User.findAll({
       where : { userID : req.body.userID}
     }).then((data)=>

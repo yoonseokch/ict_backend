@@ -23,8 +23,6 @@ router.get('/:category',(req,res)=>{
         boardCategory : req.params.category
       }
     };
-    
-    console.log(req.query); 
     if (req.query.limit)
     {
       if (req.query.limit!==NaN)
