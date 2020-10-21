@@ -11,6 +11,7 @@ router.get('/:postid',(req,res)=>{
 });
 
 router.post('/write',(req,res) => {
+
     var a=req.body;
     var today=new Date();
     a.writtenDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();

@@ -37,7 +37,8 @@ module.exports = (sequelize, Datatypes) => {
     },
     {
       freezeTableName: true,
-      timestamps: false
+      timestamps: false,
+      onDelete: 'cascade'
     }),
     'Reply': sequelize.define('Reply', {
       ID:
