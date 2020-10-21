@@ -44,7 +44,8 @@ module.exports = (sequelize, Datatypes) => {
       ID:
       {
         type: Datatypes.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoincremnt : true
       },
       content: {
         type : Datatypes.STRING
