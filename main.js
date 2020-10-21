@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(require('cors')());
 app.use('/login', require('./routes/login.js'));
 app.use('/register', require('./routes/register.js'));
+app.use('/interpret',require('./routes/interpret.js'));
 app.use((req, res, next) => {
   console.log(req.headers['token']);
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
@@ -22,7 +23,6 @@ app.use('/analyze',require('./routes/analyze.js'));
 app.use('/boards',require('./routes/board.js'));
 app.use('/reply', require('./routes/reply.js'));
 app.use('/user',  require('./routes/user/index'));
-app.use('/interpret',require('./routes/interpret.js'));
 app.post('/apicall1', upload.single('temp'),(req, res) => {
   let file = req.file.buffer.toString('base64');
   var mimetype = req.file.mimetype.split("/");
