@@ -26,6 +26,10 @@ module.exports = (sequelize, Datatypes) => {
         {
           type:Datatypes.INTEGER
         },
+        Category:
+        {
+            type:Datatypes.INTEGER
+        }
       },
       {
         freezeTableName: true,
