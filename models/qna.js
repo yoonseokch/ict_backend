@@ -8,15 +8,18 @@ module.exports = (sequelize, Datatypes) => {
         },
         User_ID:
         {
-          type: Datatypes.INTEGER
+          type: Datatypes.INTEGER,
+          allowNull : false
         },
         title:
         {
-          type: Datatypes.STRING
+          type: Datatypes.STRING,
+          allowNull : false
         },
         content:
         {
-          type: Datatypes.TEXT
+          type: Datatypes.TEXT,
+          allowNull : false
         },
         writtenDate:
         {
@@ -29,6 +32,7 @@ module.exports = (sequelize, Datatypes) => {
         Category:
         {
             type:Datatypes.INTEGER,
+            allowNull : false,
             references: {
               model: 'Category',
               key: 'ID'
