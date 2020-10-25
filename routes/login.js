@@ -3,7 +3,6 @@ const router = express.Router();
 const db=require('../models/index.js');
 const jwt=require('jsonwebtoken');
 router.post('/', (req, res) => {
-    var secret = "abc";
     db.User.User.findOne({
       where: { userID: req.body.userID },
       order : [ ['ID','DESC']]
@@ -40,5 +39,10 @@ router.post('/', (req, res) => {
   
     });
   });
-
+router.post('/check',(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({success:false});
+    else res.json({success:true});
+  })
+});
 module.exports = router;
