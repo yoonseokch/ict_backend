@@ -35,6 +35,30 @@ module.exports = (sequelize, Datatypes) => {
         freezeTableName: true,
         timestamps: false,
         onDelete: 'cascade'
+      }),
+      'Category': sequelize.define('Category', {
+        ID:
+        {
+          type: Datatypes.INTEGER,
+          primaryKey: true
+        },
+        name:
+        {
+          type: Datatypes.STRING
+        },
+        refCount:
+        {
+          type:Datatypes.INTEGER
+        },
+        majorBool:
+        {
+          type:Datatypes.INTEGER
+        }
+      },
+      {
+        freezeTableName: true,
+        timestamps: false,
       })
+
     }
   };
