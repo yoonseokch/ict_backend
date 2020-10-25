@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db=require('../models/index.js');
+const jwt=require('jsonwebtoken');
 router.get('/question',(req,res)=>{
     db.Qna.Question.findAll({
         order : [['ID','DESC']]
