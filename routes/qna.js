@@ -15,7 +15,10 @@ router.post('/question',(req,res) => {
     a.views=0;
     var today=new Date();
     a.writtenDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    console.log(a);
+    jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+        if (err) res.json({success:false});
+        a.User_ID=decoded.id;
+    })
     db.Qna.Question.create(a).then( result => {
       res.json({success:true});  
     })
