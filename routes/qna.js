@@ -4,30 +4,36 @@ const db=require('../models/index.js');
 const jwt=require('jsonwebtoken');
 const Sequelize=require('sequelize');
 const Op = Sequelize.Op;
-router.get('/question',(req,res)=>{
+router.get('/question', async (req,res)=>{
     var tags=[];
     db.Qna.Question.findAll({
         order : [['writtenDate','DESC']]
     })
     .then(async (posts) => {
-        const finished = new Array(posts.length);
-        for(let i=0; i<posts.length; i++) finished[i] = false;
-    
-        for (const [idx, post] of posts.entries())
-        {
-            db.Qna.Question_has_Category.findAll({
-                attributes: ['Category_ID'],
-                where : { Question_ID : post.dataValues.ID}
-            }).then((data)=>{
-                tags[idx] = data
-            });
+        const reqs = [];
+        const sleep = (ms) => {
+            return new Promise(res => setTimeout(res, ms));
         }
-        setTimeout(()=>{
-            res.json({
-                posts:posts,
-                tags : tags
-            });
-        },200)
+    
+        for (const post of posts)
+        {
+            reqs.push(
+                db.Qna.Question_has_Category.findAll({
+                    attributes: ['Category_ID'],
+                    where : { Question_ID : post.dataValues.ID},
+                    raw: true,
+                })
+            );
+        }
+
+        for(const [idx, post] of posts.entries()) {
+            const tags = await reqs[idx];
+            post.dataValues.tags = tags;
+        }
+
+        res.json({
+            posts: posts
+        });
     })
 });
 router.post('/question/search',(req,res)=>{
@@ -37,7 +43,6 @@ router.post('/question/search',(req,res)=>{
     }
     else if (req.body.kind=="제목")
     {
-        var tags=[];
         db.Qna.Question.findAll({
             order : [['writtenDate','DESC']],
             where : {
@@ -46,29 +51,34 @@ router.post('/question/search',(req,res)=>{
             }}
         })
         .then(async (posts) => {
-            const finished = new Array(posts.length);
-            for(let i=0; i<posts.length; i++) finished[i] = false;
-        
-            for (const [idx, post] of posts.entries())
-            {
-                db.Qna.Question_has_Category.findAll({
-                    attributes: ['Category_ID'],
-                    where : { Question_ID : post.dataValues.ID}
-                }).then((data)=>{
-                    tags[idx] = data
-                });
+            const reqs = [];
+            const sleep = (ms) => {
+                return new Promise(res => setTimeout(res, ms));
             }
-            setTimeout(()=>{
-                res.json({
-                    posts:posts,
-                    tags : tags
-                });
-            },200)
+        
+            for (const post of posts)
+            {
+                reqs.push(
+                    db.Qna.Question_has_Category.findAll({
+                        attributes: ['Category_ID'],
+                        where : { Question_ID : post.dataValues.ID},
+                        raw: true,
+                    })
+                );
+            }
+    
+            for(const [idx, post] of posts.entries()) {
+                const tags = await reqs[idx];
+                post.dataValues.tags = tags;
+            }
+    
+            res.json({
+                posts: posts
+            });
         })
     }
     else
     {
-        var tags=[];
         db.Qna.Question.findAll({
             order : [['writtenDate','DESC']],
             where : {
@@ -77,24 +87,30 @@ router.post('/question/search',(req,res)=>{
             }}
         })
         .then(async (posts) => {
-            const finished = new Array(posts.length);
-            for(let i=0; i<posts.length; i++) finished[i] = false;
-        
-            for (const [idx, post] of posts.entries())
-            {
-                db.Qna.Question_has_Category.findAll({
-                    attributes: ['Category_ID'],
-                    where : { Question_ID : post.dataValues.ID}
-                }).then((data)=>{
-                    tags[idx] = data
-                });
+            const reqs = [];
+            const sleep = (ms) => {
+                return new Promise(res => setTimeout(res, ms));
             }
-            setTimeout(()=>{
-                res.json({
-                    posts:posts,
-                    tags : tags
-                });
-            },200)
+        
+            for (const post of posts)
+            {
+                reqs.push(
+                    db.Qna.Question_has_Category.findAll({
+                        attributes: ['Category_ID'],
+                        where : { Question_ID : post.dataValues.ID},
+                        raw: true,
+                    })
+                );
+            }
+    
+            for(const [idx, post] of posts.entries()) {
+                const tags = await reqs[idx];
+                post.dataValues.tags = tags;
+            }
+    
+            res.json({
+                posts: posts
+            });
         })
     }
 })
