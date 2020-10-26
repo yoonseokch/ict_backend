@@ -12,7 +12,7 @@ router.post('/',(req,res)=>{
         scriptPath: process.env.HANIUMDIR,
         args: [req.body.purpose,req.body.cause,req.body.caseName,req.body.method]
       };
-      PythonShell.run("tfidf.py", options, function(err, data) {
+      PythonShell.run("run.py", options, function(err, data) {
         if (err) throw err;
         console.log(data);
         res.json(JSON.parse(data));

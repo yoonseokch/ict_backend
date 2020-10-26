@@ -122,7 +122,7 @@ router.get('/category',(req,res)=>{
 });
 router.post('/question',(req,res) => {
     console.log(req.body);
-    var a=req.body;
+    var a=req.body.question;
     a.views=0;
     var today=new Date();
     var time1=today.getHours()+":"+today.getMinutes()+":"+today.getSeconds();
@@ -132,8 +132,24 @@ router.post('/question',(req,res) => {
         if (err) res.json({success:false});
         a.User_ID=decoded.id;
     })
-    db.Qna.Question.create(a).then( result => {
-      res.json({success:true});  
+    db.Qna.Question.create(a).then( async (result) => {
+        console.log(result.null);
+        const reqs = [];
+        for (const category of req.body.Category)
+        {
+            var a={
+                Category_ID : category.Category_ID,
+                Question_ID : result.null,
+            }
+            reqs.push(
+                db.Qna.Question_has_Category.create(a).then( result => {
+                  })
+            );
+        }
+        for(const [idx, post] of req.body.Category.entries()) {
+            const tags = await reqs[idx];
+        }
+        res.json({success:true});
     })
     .catch(err => {
         console.log(err);
