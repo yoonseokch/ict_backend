@@ -11,6 +11,7 @@ router.post('/',(req,response) => {
         const parser=require('node-html-parser');
         const root = parser.parse(data);
         const src = root.querySelector('dd');
+  //      console.log(src);
         if (src===null)
         {
             let data = encodeURIComponent(req.body.query);
@@ -47,8 +48,6 @@ router.post('/',(req,response) => {
                         if(found)
                             break;
                     }
-        
-                    index=0;
                     if (!found)
                     {
                         response.json({data:""});
@@ -84,6 +83,7 @@ router.post('/',(req,response) => {
         else
         {
             const dir=root.querySelector('h3');
+            console.log(dir.text);
             if (dir.text==="법령한영사전")
             {
                 let data = encodeURIComponent(req.body.query);
@@ -120,14 +120,14 @@ router.post('/',(req,response) => {
                             if(found)
                                 break;
                         }
-            
-                        index=0;
+                        console.log(index);
                         if (!found)
                         {
                             response.json({data: ""});
                         }
                         else
                         {
+                        console.log(json.items[index].link);
                         fetch(json.items[index].link,
                         {
                             method: 'GET',
@@ -143,6 +143,7 @@ router.post('/',(req,response) => {
                             for(let k of descriptions) {
                                 description += k.text;
                             }
+                            console.log(description);
                         //   console.log(summary);
                             if (found)
                             {
