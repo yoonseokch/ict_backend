@@ -37,32 +37,65 @@ router.post('/question/search',(req,res)=>{
     }
     else if (req.body.kind=="제목")
     {
+        var tags=[];
         db.Qna.Question.findAll({
+            order : [['writtenDate','DESC']],
             where : {
                 title: {
                 [Op.substring] : req.body.content
-            },
-        },
-        order : [['writtenDate','DESC']]
+            }}
         })
-        .then((data)=>{
-            res.json(data);
-        }).catch((err)=>{
-            res.send(err);
+        .then(async (posts) => {
+            const finished = new Array(posts.length);
+            for(let i=0; i<posts.length; i++) finished[i] = false;
+        
+            for (const [idx, post] of posts.entries())
+            {
+                db.Qna.Question_has_Category.findAll({
+                    attributes: ['Category_ID'],
+                    where : { Question_ID : post.dataValues.ID}
+                }).then((data)=>{
+                    tags[idx] = data
+                });
+            }
+            setTimeout(()=>{
+                res.json({
+                    posts:posts,
+                    tags : tags
+                });
+            },200)
         })
     }
     else
     {
-    db.Qna.Question.findAll({
-        where : {
-            content: {
-            [Op.substring] : req.body.content
-        },
-    },  order : [['writtenDate','DESC']]
-    })
-    .then((data)=>{
-        res.json(data);
-    })
+        var tags=[];
+        db.Qna.Question.findAll({
+            order : [['writtenDate','DESC']],
+            where : {
+                content: {
+                [Op.substring] : req.body.content
+            }}
+        })
+        .then(async (posts) => {
+            const finished = new Array(posts.length);
+            for(let i=0; i<posts.length; i++) finished[i] = false;
+        
+            for (const [idx, post] of posts.entries())
+            {
+                db.Qna.Question_has_Category.findAll({
+                    attributes: ['Category_ID'],
+                    where : { Question_ID : post.dataValues.ID}
+                }).then((data)=>{
+                    tags[idx] = data
+                });
+            }
+            setTimeout(()=>{
+                res.json({
+                    posts:posts,
+                    tags : tags
+                });
+            },200)
+        })
     }
 })
 router.get('/category',(req,res)=>{
