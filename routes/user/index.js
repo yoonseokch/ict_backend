@@ -29,11 +29,39 @@ router.get('/',(req,res) => {
     })
   })
   });
-  router.get('/:id',(req,res) => {
+router.get('/laywer',(req,res)=>{
+
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({ success : false});
+    db.User.User.findOne({
+      where : {ID: decoded.id}
+    }).then((data) =>{
+      if (data.lawyer===1)
+      {
+        res.json({success:true});
+      }
+      else
+      {
+        res.json({success:false});
+      }
+    })
+  })
+})
+router.get('/:id',(req,res) => {
 
       db.User.User.findOne({
         where : {ID: req.params.id}
       }).then((data) =>{
         res.json(data);
       })})
+router.get('/name/:id',(req,res)=>{
+  db.User.User.findOne({
+    attributes: ['userID'],
+    where : {ID: req.params.id}
+  })
+  .then((data) => {
+    res.json(data);
+  })
+})
+
 module.exports = router;

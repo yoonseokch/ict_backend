@@ -6,7 +6,7 @@ const Sequelize=require('sequelize');
 const Op = Sequelize.Op;
 router.get('/question',(req,res)=>{
     db.Qna.Question.findAll({
-        order : [['ID','DESC']]
+        order : [['writtenDate','DESC']]
     })
     .then((data) => {
       res.json(data);
@@ -23,11 +23,14 @@ router.post('/question/search',(req,res)=>{
             where : {
                 title: {
                 [Op.substring] : req.body.content
-            }
-        }
+            },
+        },
+        order : [['writtenDate','DESC']]
         })
         .then((data)=>{
             res.json(data);
+        }).catch((err)=>{
+            res.send(err);
         })
     }
     else
@@ -36,8 +39,8 @@ router.post('/question/search',(req,res)=>{
         where : {
             content: {
             [Op.substring] : req.body.content
-        }
-    }
+        },
+    },  order : [['writtenDate','DESC']]
     })
     .then((data)=>{
         res.json(data);
@@ -55,7 +58,9 @@ router.post('/question',(req,res) => {
     var a=req.body;
     a.views=0;
     var today=new Date();
-    a.writtenDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time1=today.getHours()+":"+today.getMinutes()+":"+today.getSeconds();
+    a.writtenDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()+" "+time1;
+    console.log(a.writtenDate);
     jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
         if (err) res.json({success:false});
         a.User_ID=decoded.id;
@@ -64,6 +69,7 @@ router.post('/question',(req,res) => {
       res.json({success:true});  
     })
     .catch(err => {
+        console.log(err);
       res.json({success: false});  
     })
 });
