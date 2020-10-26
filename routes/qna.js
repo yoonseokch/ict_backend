@@ -5,12 +5,30 @@ const jwt=require('jsonwebtoken');
 const Sequelize=require('sequelize');
 const Op = Sequelize.Op;
 router.get('/question',(req,res)=>{
+    var tags=[];
     db.Qna.Question.findAll({
         order : [['writtenDate','DESC']]
     })
-    .then((data) => {
-      res.json(data);
-    });
+    .then(async (posts) => {
+        const finished = new Array(posts.length);
+        for(let i=0; i<posts.length; i++) finished[i] = false;
+    
+        for (const [idx, post] of posts.entries())
+        {
+            db.Qna.Question_has_Category.findAll({
+                attributes: ['Category_ID'],
+                where : { Question_ID : post.dataValues.ID}
+            }).then((data)=>{
+                tags[idx] = data
+            });
+        }
+        setTimeout(()=>{
+            res.json({
+                posts:posts,
+                tags : tags
+            });
+        },200)
+    })
 });
 router.post('/question/search',(req,res)=>{
     if (req.body.kind=="키워드")

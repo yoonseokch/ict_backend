@@ -66,7 +66,23 @@ module.exports = (sequelize, Datatypes) => {
       {
         freezeTableName: true,
         timestamps: false,
-      })
-
+      }),
+      'Question_has_Category': sequelize.define('Question_has_Category', {
+        Question_ID:
+        {
+          type: Datatypes.INTEGER,
+          primaryKey: true
+        },
+        Category_ID:
+        {
+          type: Datatypes.INTEGER,
+          primaryKey: true
+        }
+      },
+      {
+        freezeTableName: true,
+        timestamps: false,
+      }),
+      
     }
   };
