@@ -37,7 +37,17 @@ headers : {
 }
 ```
 
+### QNA
 
+QNA와 관련된 api들입니다. 상세 명세는 아래와 같습니다.
+
+| 메소드 | 경로                    | 설명                                                         | 파라미터                                                     |
+| ------ | ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| GET    | /qna/question           | 모든 게시판 정보 가져오기                                    | -                                                            |
+| GET    | /qna/category           | 모든 카테고리 가져오기                                       | -                                                            |
+| POST   | /qna/question           | 새로운 게시글을 등록합니다. question에는 json 형식으로 게시글에 관한 정보를 넘겨주고 category에 해당되는 카테고리 id를 전부 넘겨줍니다. | { question : { title : string, content : string, Category : int } , category : { { Category_ID : int}, ... } } |
+| POST   | /boards/question/search | 검색 기능을 제공하는 api입니다.                              | { kind : string , content : string }                         |
+| DELETE | /boards/:id             | id에 해당하는 질문을 삭제합니다                              |                                                              |
 
 ### 게시판 
 
