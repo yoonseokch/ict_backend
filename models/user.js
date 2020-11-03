@@ -72,7 +72,7 @@ module.exports = (sequelize, Datatypes) => {
       Precedent_ID:
       {
         type: Datatypes.INTEGER,
-        primaryKey: true
+        primaryKey: true,
       }
     },
     {
