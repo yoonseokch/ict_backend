@@ -28,7 +28,7 @@ router.get('/',(req,res) => {
       res.json(data);
     })
   })
-  });
+});
 router.get('/laywer',(req,res)=>{
 
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {

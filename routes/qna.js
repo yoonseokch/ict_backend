@@ -11,9 +11,6 @@ router.get('/question', async (req,res)=>{
     })
     .then(async (posts) => {
         const reqs = [];
-        const sleep = (ms) => {
-            return new Promise(res => setTimeout(res, ms));
-        }
     
         for (const post of posts)
         {
@@ -52,9 +49,6 @@ router.post('/question/search',(req,res)=>{
         })
         .then(async (posts) => {
             const reqs = [];
-            const sleep = (ms) => {
-                return new Promise(res => setTimeout(res, ms));
-            }
         
             for (const post of posts)
             {
@@ -114,6 +108,26 @@ router.post('/question/search',(req,res)=>{
         })
     }
 })
+router.delete('/question/:id',(req,res)=>{
+    db.Qna.Question.destroy({
+        where : {
+            ID: req.params.id
+        }
+    }).then((result)=>{
+        if (result)
+        {
+            res.json({
+                success:true
+            });
+        }
+        else
+        {
+            res.json({
+                success:false
+            });
+        }
+    })
+});
 router.get('/category',(req,res)=>{
     db.Qna.Category.findAll()
     .then((data)=>{
@@ -135,10 +149,10 @@ router.post('/question',(req,res) => {
     db.Qna.Question.create(a).then( async (result) => {
         console.log(result.null);
         const reqs = [];
-        for (const category of req.body.Category)
+        for (const category of req.body.category)
         {
             var a={
-                Category_ID : category.Category_ID,
+                Category_ID : category,
                 Question_ID : result.null,
             }
             reqs.push(
@@ -146,7 +160,7 @@ router.post('/question',(req,res) => {
                   })
             );
         }
-        for(const [idx, post] of req.body.Category.entries()) {
+        for(const [idx, post] of reqs.entries()) {
             const tags = await reqs[idx];
         }
         res.json({success:true});

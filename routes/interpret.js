@@ -11,7 +11,6 @@ router.post('/',(req,response) => {
         const parser=require('node-html-parser');
         const root = parser.parse(data);
         const src = root.querySelector('dd');
-  //      console.log(src);
         if (src===null)
         {
             let data = encodeURIComponent(req.body.query);
@@ -48,6 +47,7 @@ router.post('/',(req,response) => {
                         if(found)
                             break;
                     }
+                    console.log(found);
                     if (!found)
                     {
                         response.json({data:""});
