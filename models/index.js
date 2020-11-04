@@ -27,4 +27,5 @@ db.User = require('./user.js')(sequelize, Sequelize);
 db.Board = require('./board.js')(sequelize, Sequelize);
 db.Precedent = require('./precedent.js')(sequelize, Sequelize);
 db.Qna = require('./qna.js')(sequelize,Sequelize);
+db.Lawyer = require('./lawyer.js')(sequelize,Sequelize);
 module.exports = db;

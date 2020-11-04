@@ -14,6 +14,50 @@ router.get('/',(req,res) => {
     })
   })
 });
+router.get('/favlawyer',(req,res)=>{
+  db.Lawyer.Lawyer.hasMany(db.User.FavLawyer,
+    {
+        foreignKey:'ID'
+    });
+  db.User.FavLawyer.belongsTo(db.Lawyer.Lawyer,{
+    foreignKey: 'Lawyer_ID'
+  });
+  db.Lawyer.Lawyer.belongsTo(db.User.User,
+    {
+        foreignKey:'ID'
+    });
+  db.User.User.belongsTo(db.Lawyer.Lawyer,{
+    foreignKey: 'ID'
+  });
+  db.Lawyer.Lawyer.hasMany(db.Lawyer.LawyerField,
+    {
+        foreignKey:'ID'
+    });
+  db.Lawyer.LawyerField.belongsTo(db.Lawyer.Lawyer,{
+    foreignKey: 'Lawyer_ID'
+  });
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({ success : false});
+    db.User.FavLawyer.findAll({
+      attributes: ['User_ID','Lawyer_ID'],
+      include: [
+          {
+              model:db.Lawyer.Lawyer,
+              include: [
+                {
+                model : db.User.User,
+                },
+              ]  
+          },
+    ],
+    where : {
+      User_ID : decoded.id
+    }
+    }).then(posts => {
+      res.json(posts);
+    });
+  })
+})
 router.get('/laywer',(req,res)=>{
 
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {

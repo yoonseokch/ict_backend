@@ -41,6 +41,10 @@ module.exports = (sequelize, Datatypes) => {
       phone:
       {
         type: Datatypes.STRING
+      },
+      introduction:
+      {
+        type: Datatypes.STRING
       }
     },
     {
@@ -79,5 +83,21 @@ module.exports = (sequelize, Datatypes) => {
       freezeTableName: true,
       timestamps: false
     }),
-  };
+    'FavLawyer': sequelize.define('FavLawyer', {
+      User_ID:
+      {
+        type: Datatypes.INTEGER,
+        primaryKey: true
+      },
+      Lawyer_ID:
+      {
+        type: Datatypes.INTEGER,
+        primaryKey: true,
+      }
+    },
+    {
+      freezeTableName: true,
+      timestamps: false
+    }),
+  }
 };
