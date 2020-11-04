@@ -17,7 +17,7 @@ router.get('/',(req,res) => {
 router.get('/favlawyer',(req,res)=>{
   db.Lawyer.Lawyer.hasMany(db.User.FavLawyer,
     {
-        foreignKey:'ID'
+        foreignKey:'Lawyer_ID'
     });
   db.User.FavLawyer.belongsTo(db.Lawyer.Lawyer,{
     foreignKey: 'Lawyer_ID'
@@ -31,7 +31,7 @@ router.get('/favlawyer',(req,res)=>{
   });
   db.Lawyer.Lawyer.hasMany(db.Lawyer.LawyerField,
     {
-        foreignKey:'ID'
+        foreignKey:'Lawyer_ID'
     });
   db.Lawyer.LawyerField.belongsTo(db.Lawyer.Lawyer,{
     foreignKey: 'Lawyer_ID'
@@ -47,6 +47,9 @@ router.get('/favlawyer',(req,res)=>{
                 {
                 model : db.User.User,
                 },
+                {
+                  model:db.Lawyer.LawyerField
+                }
               ]  
           },
     ],
