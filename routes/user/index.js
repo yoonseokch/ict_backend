@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 const db=require('../../models/index.js');
 const jwt=require('jsonwebtoken');
+const multer = require('multer');
+const fetch=require('node-fetch');
+const DIR=process.env.FILESDIR;
+const upload = multer({ storage: multer.memoryStorage() });
 router.use('/interests', require('./interest.js'));
 router.use('/judgement', require('./judgement.js'));
 router.get('/',(req,res) => {
@@ -10,10 +15,66 @@ router.get('/',(req,res) => {
     db.User.User.findOne({
       where : {ID: decoded.id}
     }).then((data) =>{
+      console.log(data.dataValues);
+      if (data.dataValues.photo==null)
+      {
+        data.dataValues.photo=`https://api.lawbotc.kr/files/users/default.png`;
+      }
+      else
+      {
+        data.dataValues.photo=`https://api.lawbotc.kr/files/users/${data.dataValues.photo}.jpg`;
+      }
       res.json(data);
     })
   })
 });
+router.put(`/profile`,upload.single('temp'),(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({success:false});
+    db.User.User.findOne({
+      where : {
+        ID : decoded.id
+      }
+    }).then((data)=>{
+      console.log(data.dataValues);
+      if (data.dataValues.photo===null)
+      {
+        let file = req.file.buffer;
+        fs.writeFile(`${DIR}/users/${decoded.id}.jpg`, file ,(err,data)=>{
+          if (err)
+          {
+              console.log(err);
+              res.json({success:false});
+          }
+          else
+          {
+              res.json({success:true});
+          }
+       })
+         db.User.User.update({
+           photo: decoded.id
+         },{where : {
+          ID : decoded.id
+        }})
+      }
+      else
+      {
+        let file = req.file.buffer;
+        fs.writeFile(`${DIR}/users/${decoded.id}.jpg`, file ,(err,data)=>{
+          if (err)
+          {
+              console.log(err);
+              res.json({success:false});
+          }
+          else
+          {
+              res.json({success:true});
+          }
+       })
+      }
+    })
+  });
+})
 router.get('/favlawyer',(req,res)=>{
   db.Lawyer.Lawyer.hasMany(db.User.FavLawyer,
     {

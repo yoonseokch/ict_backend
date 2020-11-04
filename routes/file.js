@@ -7,6 +7,7 @@ const DIR=process.env.FILESDIR;
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 router.get('/:route/:filename',(req,res) => {
+    console.log(`${DIR}/${req.params.route}/${req.params.filename}`);
     fs.readFile(`${DIR}/${req.params.route}/${req.params.filename}`,'utf8', ((err,data)=>{
         if (err)
         {
@@ -22,7 +23,7 @@ router.get('/:route/:filename',(req,res) => {
 router.post('/:route',upload.single('temp'),(req,res)=>{
     console.log(req.file.originalname);
     let file = req.file.buffer;
-    fs.writeFile(`${DIR}/users/${req.file.originalname}`, file,{flag:'wx'} ,(err,data)=>{
+    fs.writeFile(`${DIR}/${req.params.route}/${req.file.originalname}`, file,{flag:'wx'} ,(err,data)=>{
         if (err)
         {
             console.log(err);
