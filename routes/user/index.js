@@ -9,6 +9,7 @@ const DIR=process.env.FILESDIR;
 const upload = multer({ storage: multer.memoryStorage() });
 router.use('/interests', require('./interest.js'));
 router.use('/judgement', require('./judgement.js'));
+router.use('/posts',require('./posts.js'));
 router.get('/',(req,res) => {
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({success:false});
@@ -76,26 +77,30 @@ router.put(`/profile`,upload.single('temp'),(req,res)=>{
   });
 })
 router.get('/favlawyer',(req,res)=>{
-  db.Lawyer.Lawyer.hasMany(db.User.FavLawyer,
-    {
-        foreignKey:'Lawyer_ID'
-    });
+  db.Lawyer.Lawyer.belongsTo(db.User.FavLawyer,{
+    foreignKey: 'ID',
+    targetKey : 'Lawyer_ID'
+  });
   db.User.FavLawyer.belongsTo(db.Lawyer.Lawyer,{
-    foreignKey: 'Lawyer_ID'
+    foreignKey: 'Lawyer_ID',
+    targetKey : 'ID'
   });
   db.Lawyer.Lawyer.belongsTo(db.User.User,
     {
-        foreignKey:'ID'
+        foreignKey:'ID',
+        targetKey: 'ID'
     });
   db.User.User.belongsTo(db.Lawyer.Lawyer,{
-    foreignKey: 'ID'
+    foreignKey:'ID',
+    targetKey: 'ID'
   });
   db.Lawyer.Lawyer.hasMany(db.Lawyer.LawyerField,
     {
         foreignKey:'Lawyer_ID'
     });
   db.Lawyer.LawyerField.belongsTo(db.Lawyer.Lawyer,{
-    foreignKey: 'Lawyer_ID'
+    foreignKey: 'Lawyer_ID',
+    targetKey : 'ID'
   });
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({ success : false});
@@ -121,6 +126,18 @@ router.get('/favlawyer',(req,res)=>{
       res.json(posts);
     });
   })
+})
+router.get('/posts',(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({ success : false});
+    db.Board.Post.findAll({
+      where : {
+        User_ID : decoded.id
+      }
+    }).then((data)=>{
+      res.json(data);
+    })    
+  })  
 })
 router.get('/laywer',(req,res)=>{
 

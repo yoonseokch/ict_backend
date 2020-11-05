@@ -16,6 +16,19 @@ router.post('/',(req,res)=>
     res.json({success:false});
   })
 });
+router.delete('/',(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    db.User.FavCase.destroy({
+      where : {
+        User_ID : decoded.id,
+        Precedent_ID : req.body.Precedent_ID
+      }
+    }).then((data)=>{
+      if (data) res.json({success: true});
+      else res.json({success:false});
+    })
+  })
+})
 router.get('/',(req,res)=>{
     db.Precedent.Precedent.hasMany(db.User.FavCase,
         {
