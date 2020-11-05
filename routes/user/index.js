@@ -17,15 +17,10 @@ router.get('/',(req,res) => {
     db.User.User.findOne({
       where : {ID: decoded.id}
     }).then((data) =>{
-      console.log(data.dataValues);
       if (data.dataValues.photo==null)
       {
         data.dataValues.photo=`https://api.lawbotc.kr/files/users/default.png`;
-      }
-      else
-      {
-        data.dataValues.photo=`https://api.lawbotc.kr/files/users/${data.dataValues.photo}.jpg`;
-      }
+      }      
       res.json(data);
     })
   })
@@ -54,7 +49,7 @@ router.put(`/profile`,upload.single('temp'),(req,res)=>{
           }
        })
          db.User.User.update({
-           photo: decoded.id
+           photo: `https://api.lawbotc.kr/files/users/${decoded.id}.jpg`
          },{where : {
           ID : decoded.id
         }})
