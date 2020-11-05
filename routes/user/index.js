@@ -50,7 +50,7 @@ router.put(`/profile`,upload.single('temp'),(req,res)=>{
           }
           else
           {
-              res.json({success:true});
+              res.json({success:true, uri : `https://api.lawbotc.kr/files/users/${decoded.id}.jpg` });
           }
        })
          db.User.User.update({
@@ -71,7 +71,7 @@ router.put(`/profile`,upload.single('temp'),(req,res)=>{
           }
           else
           {
-              res.json({success:true});
+              res.json({success:true, uri : `https://api.lawbotc.kr/files/users/${decoded.id}.jpg` });
           }
        })
       }
