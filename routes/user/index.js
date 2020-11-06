@@ -16,11 +16,7 @@ router.get('/',(req,res) => {
     if (err) res.json({success:false});
     db.User.User.findOne({
       where : {ID: decoded.id}
-    }).then((data) =>{
-      if (data.dataValues.photo==null)
-      {
-        data.dataValues.photo=`https://api.lawbotc.kr/files/users/default.png`;
-      }      
+    }).then((data) =>{    
       res.json(data);
     })
   })
