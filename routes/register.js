@@ -16,6 +16,7 @@ router.post('/',(req,res) => {
     {
       if (data.length===0)
       {
+        req.body.photo="https://api.lawbotc.kr/files/users/default.png";
         db.User.User.create(req.body)
         .then((data)=>{
           res.json({success:true});

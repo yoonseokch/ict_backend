@@ -11,6 +11,7 @@ router.use('/interests', require('./interest.js'));
 router.use('/judgement', require('./judgement.js'));
 router.use('/posts',require('./posts.js'));
 router.use('/favlawyer',require('./lawyer.js'));
+router.use('/favqna',require('./favqa.js'));
 router.get('/',(req,res) => {
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({success:false});

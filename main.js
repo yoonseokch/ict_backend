@@ -11,6 +11,7 @@ app.use(require('cors')());
 app.use('/login', require('./routes/login.js'));
 app.use('/register', require('./routes/register.js'));
 app.use('/files',require('./routes/file.js'));
+app.use('/lawr',require('./routes/lawr.js'));
 app.use((req, res, next) => {
   console.log(req.headers['token']);
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {

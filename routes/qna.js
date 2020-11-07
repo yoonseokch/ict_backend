@@ -36,7 +36,47 @@ router.get('/question', async (req,res)=>{
 router.post('/question/search',(req,res)=>{
     if (req.body.kind=="키워드")
     {
-
+        db.Qna.Question.hasMany(db.Qna.Question_has_Category,
+            {
+                foreignKey:'Question_ID'
+            });
+        db.Qna.Question_has_Category.belongsTo(db.Qna.Question,{
+            foreignKey: 'Question_ID',
+            targetKey: 'ID'
+        });
+        
+        jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+            db.Qna.Question.findAll({
+                order : [['writtenDate','DESC']],
+                include: [
+                    {
+                        model: db.Qna.Question_has_Category,
+                        attributes : ["Category_ID"]
+                    },
+              ],
+              }).then(posts => {
+                var data=[];
+                for (var post of posts)
+                {            
+                    var a=false;
+                    for (var i=0;i<post.Question_has_Categories.length;i++)
+                    {
+                        var next=post.Question_has_Categories[i].dataValues;
+                
+                        if (next.Category_ID==req.body.content)
+                        {
+                            a=true;
+                        }
+                    }
+                    if (a)
+                    {
+                        post.dataValues.tags=post.Question_has_Categories;
+                        data.push(post);
+                    }
+                }
+                res.json({posts:data});
+            });
+        })
     }
     else if (req.body.kind=="제목")
     {
