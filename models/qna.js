@@ -83,6 +83,29 @@ module.exports = (sequelize, Datatypes) => {
         freezeTableName: true,
         timestamps: false,
       }),
+      'Answer': sequelize.define('Answer', {
+        ID:
+        {
+          type: Datatypes.INTEGER,
+          primaryKey: true,
+          autoincremnt : true
+        },
+        content: {
+          type : Datatypes.STRING
+        },
+        writtenDate : {
+          type : Datatypes.DATE
+        },
+        Question_ID : {
+          type : Datatypes.INTEGER
+        },
+        Lawyer_ID : {
+          type : Datatypes.INTEGER
+        }
+      },
+      {
+        freezeTableName: true,timestamps: false
+      }),
       
     }
   };

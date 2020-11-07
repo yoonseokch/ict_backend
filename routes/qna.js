@@ -4,6 +4,65 @@ const db=require('../models/index.js');
 const jwt=require('jsonwebtoken');
 const Sequelize=require('sequelize');
 const Op = Sequelize.Op;
+router.get('/answer/:id',(req,res)=>{
+    db.Qna.Answer.belongsTo(db.Lawyer.Lawyer,{
+        foreignKey: 'Lawyer_ID',
+        targetKey : 'ID'
+    })
+    db.Lawyer.Lawyer.hasMany(db.Qna.Answer,{
+        foreignKey : 'ID'
+    })
+    db.Lawyer.Lawyer.belongsTo(db.User.User,{
+        foreignKey: 'ID',
+        targetKey : 'ID'
+    })
+    db.User.User.belongsTo(db.Lawyer.Lawyer,{
+        foreignKey: 'ID',
+        targetKey : 'ID'
+    })
+    db.Qna.Answer.findAll({
+        where : {
+            Question_ID : req.params.id
+        },
+        include : {
+            model : db.Lawyer.Lawyer,
+            include : {
+                    model : db.User.User
+            }
+        },
+    }).then((data)=>{
+        res.json(data);
+    })
+})
+router.delete('/answer/:id',(req,res)=>{
+    db.Qna.Answer.destroy({
+        where : {
+            ID : req.params.id
+        }
+    }).then((data)=>{
+        if (data) res.json({success:true});
+        else res.json({success:false});
+    })
+})
+router.post('/answer',(req,res)=>{
+    jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+        var a={
+            content : req.body.content,
+            Lawyer_ID : decoded.id,
+            Question_ID : req.body.Question_ID,
+        }
+        var today=new Date();
+        var time1=today.getHours()+":"+today.getMinutes()+":"+today.getSeconds();
+        a.writtenDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()+" "+time1;
+        console.log(a);
+        db.Qna.Answer.create(a).then(()=>{
+            res.json({success:true});
+        }).catch((err)=>{
+            console.log(err);
+            res.json({success:false});
+        });
+    })
+})
 router.get('/question', async (req,res)=>{
     var tags=[];
     db.Qna.Question.findAll({
