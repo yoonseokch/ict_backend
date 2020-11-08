@@ -237,6 +237,7 @@ router.post('/question',(req,res) => {
     console.log(req.body);
     var a=req.body.question;
     a.views=0;
+    a.Category=0;
     var today=new Date();
     var time1=today.getHours()+":"+today.getMinutes()+":"+today.getSeconds();
     a.writtenDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()+" "+time1;

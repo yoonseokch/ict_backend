@@ -6,11 +6,9 @@ const jwt=require('jsonwebtoken');
 router.post('/',(req,res)=>{
     
     const { PythonShell } = require("python-shell");
-    console.log(1);
-    console.log(req.body);
     let options = {
         scriptPath: process.env.LAWRDIR,
-        args: [req.body.purpose]
+        args: [req.body.tags]
       };
       PythonShell.run("lawyer_recommand.py", options, function(err, data) {
         if (err) throw err;
