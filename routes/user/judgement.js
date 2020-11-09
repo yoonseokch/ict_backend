@@ -2,6 +2,26 @@ const express = require('express');
 const router = express.Router();
 const db=require('../../models/index.js');
 const jwt=require('jsonwebtoken');
+router.post('/check',(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    db.User.FavCase.findAll({
+      where : {
+        User_ID : decoded.id,
+        Precedent_ID : req.body.Precedent_ID
+      }
+    }).then(result=>{
+   //   console.log(result);
+      if (result.length===0)
+      {
+        res.json({success:false});
+      }
+      else
+      {
+        res.json({success:true});
+      }
+    })
+  })
+})
 router.post('/',(req,res)=>
 {
   var a={};

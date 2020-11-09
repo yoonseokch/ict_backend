@@ -19,6 +19,7 @@ app.use((req, res, next) => {
     else next();
   })
 });
+app.use('/lawyer',require('./routes/lawyer.js'));
 app.use('/qna',require('./routes/qna.js'));
 app.use('/interpret',require('./routes/interpret.js'));
 app.use('/analyze',require('./routes/analyze.js'));
