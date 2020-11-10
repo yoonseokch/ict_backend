@@ -8,8 +8,14 @@ AWS.config.update({
 })
 
 const validateNum = {};
-
+const validatedNum = [];
 router.post('/',(req,res) => {
+    if (!(validatedNum.includes(req.body.phone)))
+    {
+      res.json({success:false, msg:"정일님 그만하세요"});
+    }
+    else
+    {
     db.User.User.findAll({
       where : { userID : req.body.userID}
     }).then((data)=>
@@ -20,6 +26,8 @@ router.post('/',(req,res) => {
         db.User.User.create(req.body)
         .then((data)=>{
           res.json({success:true});
+          const idx = validatedNum.indexOf(req.body.phone);
+          if (idx > -1) validatedNum.splice(idx, 1);
         }).catch((err)=>
         {
           res.json({success:false});
@@ -30,6 +38,7 @@ router.post('/',(req,res) => {
         res.json({success:false});
       }
     });
+  }
   });
 router.post('/check',(req,res) => {
     db.User.User.findAll({
@@ -91,10 +100,10 @@ router.post('/phone-validate',(req,res) => {
           }).catch(
             function(err) {
               console.error(err, err.stack);
-              res.json({ success: false });
+              res.json({ success: false, msg: "" });
           });
       }else {
-        res.json({ success: false });
+        res.json({ success: false, msg: ""});
       }
     }
     else
@@ -107,6 +116,7 @@ router.post('/phone-check', (req, res) => {
   if(req.body.phone && req.body.phone in validateNum) {
     if(validateNum[req.body.phone][0] === req.body.validateNum) {
       res.json({ success: true });
+      validatedNum.push(req.body.phone);
     }else {
       res.json({ success: false });
     }

@@ -9,10 +9,25 @@ db.Lawyer.Career.belongsTo(db.Lawyer.Lawyer,{
     foreignKey:'Lawyer_ID',
     targetKey: 'ID'
     });
+db.Qna.Question.hasMany(db.Qna.Question_has_Category,
+    {
+        foreignKey:'Question_ID'
+    });
+db.Qna.Question_has_Category.belongsTo(db.Qna.Question,{
+    foreignKey: 'Question_ID',
+    targetKey: 'ID'
+});
 db.Lawyer.Lawyer.hasMany(db.Lawyer.Education,{
     foreignKey: 'Lawyer_ID'
 });
 db.Lawyer.Education.belongsTo(db.Lawyer.Lawyer,{
+    foreignKey:'Lawyer_ID',
+    targetKey: 'ID'
+    });
+db.Lawyer.Lawyer.hasMany(db.Lawyer.Activity,{
+    foreignKey: 'Lawyer_ID'
+});
+db.Lawyer.Activity.belongsTo(db.Lawyer.Lawyer,{
     foreignKey:'Lawyer_ID',
     targetKey: 'ID'
     });
@@ -53,7 +68,10 @@ router.get('/answer/:id',(req,res)=>{
             'Lawyer_ID' : req.params.id
         },
         include : {
-            model : db.Qna.Question
+            model : db.Qna.Question,
+            include : {
+                model : db.Qna.Question_has_Category
+            }
         }
     }).then((data)=>{
         res.json(data);
@@ -92,7 +110,10 @@ router.get('/:id',(req,res)=>{
               },
               {
                 model : db.Lawyer.Education
-                }
+              },
+              {
+                  model: db.Lawyer.Activity
+              }
       ],      
       where : {
         ID : req.params.id

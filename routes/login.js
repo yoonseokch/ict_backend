@@ -39,10 +39,26 @@ router.post('/', (req, res) => {
   
     });
   });
-router.post('/check',(req,res)=>{
+router.get('/check',(req,res)=>{
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({success:false});
-    else res.json({success:true});
+    else
+    {
+      db.User.User.findAll({
+        where : {
+          ID : decoded.id
+        }
+      }).then((data)=>{
+        if (data.length===0)
+        {
+          res.json({success:false,msg:"이미 탈퇴한 아이디입니다"});
+        }
+        else
+        {
+          res.json({success:true});
+        }
+      })
+    }
   })
 });
 module.exports = router;

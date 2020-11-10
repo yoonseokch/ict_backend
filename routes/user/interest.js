@@ -37,7 +37,8 @@ router.delete('/',(req,res)=>{
       Category_ID: req.body.Category_ID
       }
   }).then((data)=>{
-      res.json(data);
+      if (data) res.json({success:true});
+      else res.json({success:false});
   })
   }
 )

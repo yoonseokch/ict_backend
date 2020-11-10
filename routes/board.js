@@ -59,9 +59,10 @@ router.post('/write',(req,res) => {
 router.delete('/:id',(req,res) =>{
     db.Board.Post.destroy({
       where : {ID : req.params.id}
-    }).then(
-    )
-    res.json({success:true});
+    }).then((data)=>{
+    if (data) res.json({success:true});
+    else res.json({success:false});
+  });
 });
 
 

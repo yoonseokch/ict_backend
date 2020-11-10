@@ -19,7 +19,7 @@ module.exports = (sequelize, Datatypes) => {
       'Education': sequelize.define('Education', {
         detail:
         {
-          type: Datatypes.INTEGER,
+          type: Datatypes.STRING,
           primaryKey: true
         },
         Lawyer_ID:
@@ -43,7 +43,7 @@ module.exports = (sequelize, Datatypes) => {
       'Career': sequelize.define('Career', {
         detail:
         {
-          type: Datatypes.INTEGER,
+          type: Datatypes.STRING,
           primaryKey: true
         },
         Lawyer_ID:
@@ -59,6 +59,26 @@ module.exports = (sequelize, Datatypes) => {
         {
           type: Datatypes.INTEGER
         },
+      },
+      {
+        freezeTableName: true,
+        timestamps: false
+      }),
+      'Activity' : sequelize.define('Activity', {
+        detail:
+        {
+          type: Datatypes.STRING,
+          primaryKey: true
+        },
+        Lawyer_ID:
+        {
+          type: Datatypes.INTEGER,
+          primaryKey: true,
+        },
+        url : 
+        {
+          type: Datatypes.STRING
+        }
       },
       {
         freezeTableName: true,

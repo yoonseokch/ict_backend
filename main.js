@@ -16,7 +16,23 @@ app.use((req, res, next) => {
   console.log(req.headers['token']);
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({success:false});
-    else next();
+    else
+    {
+      db.User.User.findAll({
+        where : {
+          ID : decoded.id
+        }
+      }).then((data)=>{
+        if (data.length===0)
+        {
+          res.json({success:false,msg:"이미 탈퇴한 아이디입니다"});
+        }
+        else
+        {
+          next();
+        }
+      })
+    }
   })
 });
 app.use('/lawyer',require('./routes/lawyer.js'));
