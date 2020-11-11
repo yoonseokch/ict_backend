@@ -96,6 +96,7 @@ router.post('/phone-validate',(req,res) => {
     
         publishTextPromise.then(
           function(data) {
+            console.log(data);
             res.json({ success: true });
           }).catch(
             function(err) {
