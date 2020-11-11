@@ -40,6 +40,30 @@ module.exports = (sequelize, Datatypes) => {
         freezeTableName: true,
         timestamps: false
       }),
+      'Qualification': sequelize.define('Qualification', {
+        detail:
+        {
+          type: Datatypes.STRING,
+          primaryKey: true
+        },
+        Lawyer_ID:
+        {
+          type: Datatypes.INTEGER,
+          primaryKey: true,
+        },
+        startYear:
+        {
+          type: Datatypes.INTEGER
+        },
+        endYear:
+        {
+          type: Datatypes.INTEGER
+        },
+      },
+      {
+        freezeTableName: true,
+        timestamps: false
+      }),
       'Career': sequelize.define('Career', {
         detail:
         {

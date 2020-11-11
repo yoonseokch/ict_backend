@@ -2,6 +2,13 @@ const express = require('express');
 const router = express.Router();
 const db=require('../models/index.js');
 const jwt=require('jsonwebtoken');
+db.Lawyer.Lawyer.hasMany(db.Lawyer.Qualification,{
+    foreignKey: 'Lawyer_ID'
+});
+db.Lawyer.Qualification.belongsTo(db.Lawyer.Lawyer,{
+    foreignKey:'Lawyer_ID',
+    targetKey: 'ID'
+    });
 db.Lawyer.Lawyer.hasMany(db.Lawyer.Career,{
     foreignKey: 'Lawyer_ID'
 });
@@ -113,6 +120,9 @@ router.get('/:id',(req,res)=>{
               },
               {
                   model: db.Lawyer.Activity
+              },
+              {
+                  model : db.Lawyer.Qualification
               }
       ],      
       where : {

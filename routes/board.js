@@ -2,9 +2,23 @@ const express = require('express');
 const router = express.Router();
 const db=require('../models/index.js');
 const jwt=require('jsonwebtoken');
+db.User.User.belongsTo(db.Board.Post,
+  {
+      foreignKey:'ID',
+      targetKey: 'User_ID'
+  });
+db.Board.Post.belongsTo(db.User.User,{
+  foreignKey:'User_ID',
+  targetKey: 'ID'
+});
 router.get('/posts',(req,res)=>{
     db.Board.Post.findAll({
-      order : [['ID','DESC']]
+      order : [['ID','DESC']],
+      include : [
+        {
+          model : db.User.User
+        }
+      ]
     })
     .then((data) => {
       res.json(data);
@@ -12,7 +26,12 @@ router.get('/posts',(req,res)=>{
 });
 router.get('/posts/:id',(req,res)=>{
     db.Board.Post.findOne({
-      where: {ID:req.params.id}
+      where: {ID:req.params.id},
+      include : [
+        {
+          model : db.User.User
+        }
+      ]
     }).then(result=>{
       res.json(result);
     })
@@ -31,6 +50,7 @@ router.get('/:category',(req,res)=>{
       }
     }
     info.order=[['ID','DESC']];
+    info.include={model : db.User.User};
     db.Board.Post.findAll(info).then((data)=>{
       res.json(data);
     })

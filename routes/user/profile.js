@@ -94,6 +94,7 @@ router.put('/password',(req,res)=>{
 router.put('/introduction',(req,res)=>{
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({success:false});
+    console.log(decoded.id);
     db.User.User.update({introduction: req.body.introduction},{where :{
       ID : decoded.id
     }}).then(result => {
@@ -108,6 +109,45 @@ router.put('/lawyer/introduction',(req,res)=>{
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({success:false});
     db.Lawyer.Lawyer.update({introduction: req.body.introduction},{where :{
+      ID : decoded.id
+    }}).then(result => {
+      res.json({success:true});
+    })
+    .catch(err => {
+      res.json({success:false,msg:"프로필 업데이트에 실패했습니다"});
+    });
+  })
+})
+router.put('/lawyer/address',(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({success:false});
+    db.Lawyer.Lawyer.update({address1: req.body.address},{where :{
+      ID : decoded.id
+    }}).then(result => {
+      res.json({success:true});
+    })
+    .catch(err => {
+      res.json({success:false,msg:"프로필 업데이트에 실패했습니다"});
+    });
+  })
+})
+router.put('/lawyer/companyname',(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({success:false});
+    db.Lawyer.Lawyer.update({companyName: req.body.companyName},{where :{
+      ID : decoded.id
+    }}).then(result => {
+      res.json({success:true});
+    })
+    .catch(err => {
+      res.json({success:false,msg:"프로필 업데이트에 실패했습니다"});
+    });
+  })
+})
+router.put('/lawyer/companyphone',(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({success:false});
+    db.Lawyer.Lawyer.update({companyPhone: req.body.companyPhone},{where :{
       ID : decoded.id
     }}).then(result => {
       res.json({success:true});
@@ -165,6 +205,38 @@ router.delete('/lawyer/career',(req,res)=>{
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({success:false});
     db.Lawyer.Career.destroy({
+      where : {
+        Lawyer_ID : decoded.id,
+        detail : req.body.detail
+      }
+    }).then( result => {
+      if (result)
+      {
+        res.json({success:true});
+      }
+      else
+      {
+        res.json({success:false});
+      }
+    })
+  })
+});
+router.post('/lawyer/qualification',(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({success:false});
+    req.body.Lawyer_ID=decoded.id;
+    db.Lawyer.Qualification.create(req.body).then( result => {
+      res.json({success:true});  
+    })
+  .catch(err => {
+      res.json({success: false});  
+  })
+  })
+});
+router.delete('/lawyer/qualification',(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (err) res.json({success:false});
+    db.Lawyer.Qualification.destroy({
       where : {
         Lawyer_ID : decoded.id,
         detail : req.body.detail

@@ -75,7 +75,6 @@ router.get('/question', async (req,res)=>{
         {
             reqs.push(
                 db.Qna.Question_has_Category.findAll({
-                    attributes: ['Category_ID'],
                     where : { Question_ID : post.dataValues.ID},
                     raw: true,
                 })
@@ -84,7 +83,7 @@ router.get('/question', async (req,res)=>{
 
         for(const [idx, post] of posts.entries()) {
             const tags = await reqs[idx];
-            post.dataValues.tags = tags;
+            post.dataValues.Question_has_Categories = tags;
         }
 
         res.json({
@@ -110,7 +109,6 @@ router.post('/question/search',(req,res)=>{
                 include: [
                     {
                         model: db.Qna.Question_has_Category,
-                        attributes : ["Category_ID"]
                     },
               ],
               }).then(posts => {
@@ -129,7 +127,7 @@ router.post('/question/search',(req,res)=>{
                     }
                     if (a)
                     {
-                        post.dataValues.tags=post.Question_has_Categories;
+                        post.dataValues.Question_has_Categories=post.Question_has_Categories;
                         data.push(post);
                     }
                 }
@@ -153,7 +151,6 @@ router.post('/question/search',(req,res)=>{
             {
                 reqs.push(
                     db.Qna.Question_has_Category.findAll({
-                        attributes: ['Category_ID'],
                         where : { Question_ID : post.dataValues.ID},
                         raw: true,
                     })
@@ -162,7 +159,7 @@ router.post('/question/search',(req,res)=>{
     
             for(const [idx, post] of posts.entries()) {
                 const tags = await reqs[idx];
-                post.dataValues.tags = tags;
+                post.dataValues.Question_has_Categories = tags;
             }
     
             res.json({
@@ -189,7 +186,6 @@ router.post('/question/search',(req,res)=>{
             {
                 reqs.push(
                     db.Qna.Question_has_Category.findAll({
-                        attributes: ['Category_ID'],
                         where : { Question_ID : post.dataValues.ID},
                         raw: true,
                     })
@@ -198,7 +194,7 @@ router.post('/question/search',(req,res)=>{
     
             for(const [idx, post] of posts.entries()) {
                 const tags = await reqs[idx];
-                post.dataValues.tags = tags;
+                post.dataValues.Question_has_Categories = tags;
             }
     
             res.json({
