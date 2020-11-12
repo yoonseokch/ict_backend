@@ -1,10 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const db=require('../models/index.js');
-
+db.Board.Reply.belongsTo(db.User.User,{
+  foreignKey:'User_ID',
+  targetKey: 'ID'
+});
+db.User.User.belongsTo(db.Board.Reply,{
+  foreignKey:'ID',
+  targetKey: 'User_ID'
+});
 router.get('/:postid',(req,res)=>{
     db.Board.Reply.findAll({
-      where: {Post_ID:req.params.postid}
+      where: {Post_ID:req.params.postid},
+      include : {
+        model : db.User.User
+      }
     }).then(result=>{
       res.json(result);
     })

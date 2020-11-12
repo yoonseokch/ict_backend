@@ -5,6 +5,7 @@ const jwt=require('jsonwebtoken');
 router.post('/check',(req,res)=>{
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     db.User.FavCase.findAll({
+      attributes : ['User_ID','Precedent_ID'],
       where : {
         User_ID : decoded.id,
         Precedent_ID : req.body.Precedent_ID

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db=require('../models/index.js');
 const jwt=require('jsonwebtoken');
+const Sequelize=require('sequelize');
+const Op = Sequelize.Op;
 db.User.User.belongsTo(db.Board.Post,
   {
       foreignKey:'ID',
@@ -11,6 +13,49 @@ db.Board.Post.belongsTo(db.User.User,{
   foreignKey:'User_ID',
   targetKey: 'ID'
 });
+router.post('/posts/search',(req,res)=>{
+  if (req.body.kind=="제목")
+  {
+    db.Board.Post.findAll({
+      order : [['writtenDate','DESC']],
+      where : {
+          title: {
+          [Op.substring] : req.body.content
+      }},
+      include : [
+        {
+          model : db.User.User
+        }
+      ]
+    }).then((data)=>{
+      res.json(data);
+    })
+  }
+  else if(req.body.kind=="내용")
+  {
+    db.Board.Post.findAll({
+      order : [['writtenDate','DESC']],
+      where : {
+          content: {
+          [Op.substring] : req.body.content
+      }},
+      include : [
+        {
+          model : db.User.User
+        }
+      ]
+    }).then((data)=>{
+      res.json(data);
+    })
+  }
+  else
+  {
+    res.json({
+      success: false,
+      msg: "잘못된 접근입니다"
+    })
+  }
+})
 router.get('/posts',(req,res)=>{
     db.Board.Post.findAll({
       order : [['ID','DESC']],

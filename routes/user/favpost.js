@@ -2,6 +2,15 @@ const express = require('express');
 const router = express.Router();
 const db=require('../../models/index.js');
 const jwt=require('jsonwebtoken');
+db.User.User.belongsTo(db.Board.Post,
+  {
+      foreignKey:'ID',
+      targetKey: 'User_ID'
+  });
+db.Board.Post.belongsTo(db.User.User,{
+  foreignKey:'User_ID',
+  targetKey: 'ID'
+});
 router.get('/',(req,res)=>
 {
     db.Board.Post.hasMany(db.User.FavPost , {
@@ -17,6 +26,9 @@ router.get('/',(req,res)=>
             include: [
                 {
                     model:db.Board.Post,
+                    include : {
+                      model : db.User.User
+                    }
                 },
             ],
           where : {

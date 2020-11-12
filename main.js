@@ -8,12 +8,17 @@ const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 app.use(express.json()); 
 app.use(require('cors')());
+
+app.all('*', (req, res, next) => {
+  console.log(`${req.method} ${req.originalUrl} ${req.headers.token} ${req.headers["content-type"]}`);
+  console.log(req.body);
+  next();
+});
 app.use('/login', require('./routes/login.js'));
 app.use('/register', require('./routes/register.js'));
 app.use('/files',require('./routes/file.js'));
 app.use('/lawr',require('./routes/lawr.js'));
 app.use((req, res, next) => {
-  console.log(req.headers['token']);
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({success:false});
     else
