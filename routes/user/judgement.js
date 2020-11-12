@@ -11,7 +11,6 @@ router.post('/check',(req,res)=>{
         Precedent_ID : req.body.Precedent_ID
       }
     }).then(result=>{
-   //   console.log(result);
       if (result.length===0)
       {
         res.json({success:false});
