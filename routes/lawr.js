@@ -4,7 +4,7 @@ const db=require('../models/index.js');
 const jwt=require('jsonwebtoken');
 const Sequelize=require('sequelize');
 router.post('/',(req,res)=>{
-    
+    let a=[];
     const { PythonShell } = require("python-shell");
     let options = {
         scriptPath: process.env.LAWRDIR,
@@ -29,7 +29,6 @@ router.post('/',(req,res)=>{
           foreignKey: 'Lawyer_ID',
           targetKey : 'ID'
         });
-        let a=[];
         console.log(JSON.parse(data));
         for (var i=0;i<JSON.parse(data).length;i++)
         {
@@ -47,7 +46,19 @@ router.post('/',(req,res)=>{
             }
           }
         }).then((data)=>{
-          res.json(data);
+          var b=[];
+          for (let i=0;i<5;i++)
+          {
+            for (let j=0;j<5;j++)
+            {
+              if (a[i]==data[j].ID)
+              {
+                b.push(data[j]);
+                j=5;
+              }
+            }
+          }
+          res.json(b);
         })
       });
 

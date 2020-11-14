@@ -40,6 +40,17 @@ app.use((req, res, next) => {
     }
   })
 });
+app.get('/check/:id',(req,res)=>{
+  jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
+    if (req.params.id==decoded.id)
+    {
+      res.json({success:true});
+    }
+    else{
+      res.json({success:false});
+    }
+  })
+})
 app.use('/lawyer',require('./routes/lawyer.js'));
 app.use('/qna',require('./routes/qna.js'));
 app.use('/interpret',require('./routes/interpret.js'));

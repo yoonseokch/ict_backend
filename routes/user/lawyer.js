@@ -2,32 +2,32 @@ const express = require('express');
 const router = express.Router();
 const db=require('../../models/index.js');
 const jwt=require('jsonwebtoken');
+db.Lawyer.Lawyer.belongsTo(db.User.FavLawyer,{
+  foreignKey: 'ID',
+  targetKey : 'Lawyer_ID'
+});
+db.User.FavLawyer.belongsTo(db.Lawyer.Lawyer,{
+  foreignKey: 'Lawyer_ID',
+  targetKey : 'ID'
+});
+db.Lawyer.Lawyer.belongsTo(db.User.User,
+  {
+      foreignKey:'ID',
+      targetKey: 'ID'
+  });
+db.User.User.belongsTo(db.Lawyer.Lawyer,{
+  foreignKey:'ID',
+  targetKey: 'ID'
+});
+db.Lawyer.Lawyer.hasMany(db.Lawyer.LawyerField,
+  {
+      foreignKey:'Lawyer_ID'
+  });
+db.Lawyer.LawyerField.belongsTo(db.Lawyer.Lawyer,{
+  foreignKey: 'Lawyer_ID',
+  targetKey : 'ID'
+});
 router.get('/',(req,res)=>{
-  db.Lawyer.Lawyer.belongsTo(db.User.FavLawyer,{
-    foreignKey: 'ID',
-    targetKey : 'Lawyer_ID'
-  });
-  db.User.FavLawyer.belongsTo(db.Lawyer.Lawyer,{
-    foreignKey: 'Lawyer_ID',
-    targetKey : 'ID'
-  });
-  db.Lawyer.Lawyer.belongsTo(db.User.User,
-    {
-        foreignKey:'ID',
-        targetKey: 'ID'
-    });
-  db.User.User.belongsTo(db.Lawyer.Lawyer,{
-    foreignKey:'ID',
-    targetKey: 'ID'
-  });
-  db.Lawyer.Lawyer.hasMany(db.Lawyer.LawyerField,
-    {
-        foreignKey:'Lawyer_ID'
-    });
-  db.Lawyer.LawyerField.belongsTo(db.Lawyer.Lawyer,{
-    foreignKey: 'Lawyer_ID',
-    targetKey : 'ID'
-  });
   jwt.verify(req.headers['token'], process.env.secret, (err, decoded) => {
     if (err) res.json({ success : false});
     db.User.FavLawyer.findAll({

@@ -112,7 +112,9 @@ router.post('/write',(req,res) => {
     a.User_ID=decoded.id;
   })
   var today=new Date();
-  a.writtenDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  var time1=today.getHours()+":"+today.getMinutes()+":"+today.getSeconds();
+  a.writtenDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()+" "+time1;
+  console.log(a.writtenDate);
   db.Board.Post.create(a).then( result => {
     res.json({success:true});  
   })
